@@ -1,5 +1,5 @@
 
- ![BotCommander интерфейс](interface.png)
+ ![BotCommander интерфейс](interface.jpg)
 
 🚀 BotCommander
 
