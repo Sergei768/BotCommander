@@ -122,116 +122,146 @@ def index():
 <title>BotCommander</title>
 <style>
   body {
-    background-color: #1a1a1a;
-    color: #e0e0e0;
-    font-family: "Courier New", monospace;
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: 13px;
     margin: 0;
-    padding: 20px;
-    line-height: 1.4;
+    padding: 40px;
   }
-  h1 {
-    text-align: center;
-    font-size: 18px;
-    margin-bottom: 20px;
-    color: #888;
-    font-weight: normal;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-  .system-info {
+  .header {
     text-align: center;
     margin-bottom: 30px;
-    font-size: 11px;
-    color: #666;
-    font-family: monospace;
-    white-space: pre-wrap;
-    border-bottom: 1px solid #333;
-    padding-bottom: 15px;
   }
-  table {
-    width: 95%;
-    margin: 0 auto;
-    border-collapse: collapse;
-    border: none;
+  .header h1 {
+    font-size: 24px;
+    font-weight: 300;
+    margin: 0;
+    color: #ffffff;
+    letter-spacing: 2px;
+  }
+  .system-info {
+    margin-bottom: 20px;
     font-size: 12px;
+    color: #808080;
+    font-family: monospace;
+    background: #252526;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 16px 20px;
+    line-height: 1.6;
+    text-align: center;
   }
-  th, td {
-    border: none;
-    border-bottom: 1px solid #333;
-    padding: 8px 12px;
-    text-align: left;
+  .bot-row {
+    background: #252526;
+    border: 1px solid #333;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: border-color 0.2s;
   }
-  th {
-    background-color: transparent;
-    color: #666;
-    font-weight: normal;
-    text-transform: uppercase;
-    font-size: 10px;
-    letter-spacing: 1px;
+  .bot-row:hover {
+    border-color: #404040;
   }
-  td {
-    color: #aaa;
-  }
-  a {
-    color: #888;
-    text-decoration: none;
-    border-bottom: 1px dotted #555;
-    margin: 0 4px;
-    font-size: 11px;
-  }
-  a:hover {
-    color: #ccc;
-    border-bottom-color: #ccc;
-  }
-  .status-ON {
-    color: #7a7a7a;
-  }
-  .status-DOWN, .status-ERROR {
-    color: #666;
-  }
-  .status-STARTING {
-    color: #999;
-  }
-  .status-OFFLINE {
-    color: #444;
-  }
-  tr:hover {
-    background-color: #222;
-  }
-  tr.offline {
+  .bot-row.offline {
     opacity: 0.6;
   }
-  tr.starting {
-    background-color: #252525;
+  .bot-row.starting {
+    border-color: #dcdcaa;
+  }
+  .bot-name {
+    width: 120px;
+    font-weight: 500;
+    color: #ffffff;
+  }
+  .bot-status {
+    width: 100px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .bot-metric {
+    width: 80px;
+    text-align: center;
+    font-family: monospace;
+  }
+  .bot-metric-label {
+    font-size: 10px;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .bot-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 16px;
+  }
+  a {
+    color: #4a9eff;
+    text-decoration: none;
+    font-size: 12px;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  .status-ON {
+    color: #4ec9b0;
+  }
+  .status-DOWN, .status-ERROR {
+    color: #f48771;
+  }
+  .status-STARTING {
+    color: #dcdcaa;
+  }
+  .status-OFFLINE {
+    color: #6e6e6e;
   }
 </style>
 <script>
 function fetchStatus() {
   fetch('/status').then(response => response.json()).then(data => {
     document.getElementById('system-info').textContent = data.system_info;
-    const tbody = document.getElementById('bots-tbody');
-    tbody.innerHTML = '';
+    const container = document.getElementById('bots-container');
+    container.innerHTML = '';
     for (const [name, info] of Object.entries(data.bots)) {
-      const row = document.createElement('tr');
-      if(info.status === 'OFFLINE') row.className = 'offline';
-      else if(info.status.startsWith('STARTING')) row.className = 'starting';
-
+      const row = document.createElement('div');
+      row.className = 'bot-row';
+      if (info.status === 'OFFLINE') row.classList.add('offline');
+      else if (info.status.startsWith('STARTING')) row.classList.add('starting');
+      
+      const statusClass = 'status-' + info.status.split(' ')[0];
+      
+      let actionsHtml = '';
+      if (info.status === 'OFFLINE') {
+        actionsHtml = `<a href="/enable/${name}">Enable</a>`;
+      } else {
+        actionsHtml = `
+          <a href="/restart/${name}">Restart</a>
+          <a href="/stop/${name}">Stop</a>
+          <a href="/disable/${name}">Disable</a>
+        `;
+      }
+      
       row.innerHTML = `
-        <td>${name}</td>
-        <td title="${info.errors.length ? info.errors.join('\\n') : 'No errors'}" class="status-${info.status.split(' ')[0]}">${info.status}</td>
-        <td>${info.cpu.toFixed(1)}</td>
-        <td>${info.mem.toFixed(1)}</td>
-        <td>${info.uptime || '-'}</td>
-        <td>
-          ${info.status === 'OFFLINE'
-            ? `<a href="/enable/${name}">Enable</a>`
-            : `<a href="/restart/${name}">Restart</a> |
-               <a href="/stop/${name}">Stop</a> |
-               <a href="/disable/${name}">Turn off</a>`}
-        </td>
+        <div class="bot-name">${name}</div>
+        <div class="bot-status ${statusClass}">${info.status}</div>
+        <div class="bot-metric">
+          <div class="bot-metric-label">CPU</div>
+          <div>${info.cpu.toFixed(1)}%</div>
+        </div>
+        <div class="bot-metric">
+          <div class="bot-metric-label">RAM</div>
+          <div>${info.mem.toFixed(1)}%</div>
+        </div>
+        <div class="bot-metric">
+          <div class="bot-metric-label">Uptime</div>
+          <div>${info.uptime || '-'}</div>
+        </div>
+        <div class="bot-actions">${actionsHtml}</div>
       `;
-      tbody.appendChild(row);
+      container.appendChild(row);
     }
   });
 }
@@ -240,22 +270,11 @@ window.onload = fetchStatus;
 </script>
 </head>
 <body>
-  <h1>BotCommander</h1>
+  <div class="header">
+    <h1>BotCommander</h1>
+  </div>
   <div id="system-info" class="system-info">Loading...</div>
-  <table>
-    <thead>
-      <tr>
-        <th>Bot name</th>
-        <th>Status</th>
-        <th>CPU (%)</th>
-        <th>RAM (%)</th>
-        <th>Uptime</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody id="bots-tbody">
-    </tbody>
-  </table>
+  <div id="bots-container"></div>
 </body>
 </html>
 ''', bots=bots)
@@ -276,8 +295,8 @@ def status():
             'errors': errors,
         }
     system_info_text = (
-        f"{system['hostname']} | {system['os_info']}\n"
-        f"CPU: {system['cpu']:.1f}% | RAM: {system['ram']:.1f}% | Uptime: {system['uptime']}\n"
+        f"{system['hostname']} | {system['os_info']} | "
+        f"CPU: {system['cpu']:.1f}% | RAM: {system['ram']:.1f}% | Uptime: {system['uptime']} | "
         f"Python: {system['python_version']} | Arch: {system['cpu_arch']}"
     )
     return jsonify({
