@@ -16,15 +16,6 @@ BotCommander is a simple and user-friendly web interface for managing multiple P
 
 BotCommander doesn't use Docker because Python's virtual environments (venv) provide sufficient isolation for managing bots — it's lighter, faster, and doesn't waste resources on container overhead.
 
-🧩 Example: Adding a New Bot
-
-    mkdir -p bot/mybot
-    cd bot/mybot
-    python3 -m venv venv
-    source venv/bin/activate
-    pip install <required_dependencies>
-    nano main.py  # create and write your bot's code
-
 ✅ Running BotCommander
 
     #Install dependencies:
