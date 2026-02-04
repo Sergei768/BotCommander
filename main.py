@@ -84,11 +84,11 @@ def format_uptime(seconds):
     d, h = divmod(h, 24)
     parts = []
     if d > 0:
-        parts.append(f"{d}д")
+        parts.append(f"{d}d")
     if h > 0:
-        parts.append(f"{h}ч")
+        parts.append(f"{h}h")
     if m > 0:
-        parts.append(f"{m}м")
+        parts.append(f"{m}m")
     parts.append(f"{s}с")
     return ' '.join(parts)
 
@@ -119,72 +119,91 @@ def index():
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Управление ботами</title>
+<title>BotCommander</title>
 <style>
   body {
-    background-color: white;
-    color: black;
-    font-family: "Times New Roman", serif;
-    font-size: 14px;
-    margin: 20px;
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.4;
   }
   h1 {
     text-align: center;
-    font-size: 24px;
-    margin-bottom: 10px;
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #888;
+    font-weight: normal;
+    letter-spacing: 2px;
+    text-transform: uppercase;
   }
   .system-info {
     text-align: center;
-    margin-bottom: 20px;
-    font-weight: bold;
+    margin-bottom: 30px;
+    font-size: 11px;
+    color: #666;
     font-family: monospace;
     white-space: pre-wrap;
+    border-bottom: 1px solid #333;
+    padding-bottom: 15px;
   }
   table {
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
     border-collapse: collapse;
-    border: 2px solid black;
+    border: none;
+    font-size: 12px;
   }
   th, td {
-    border: 1px solid black;
-    padding: 6px 8px;
-    text-align: center;
-    white-space: nowrap;
+    border: none;
+    border-bottom: 1px solid #333;
+    padding: 8px 12px;
+    text-align: left;
   }
   th {
-    background-color: #ddd;
+    background-color: transparent;
+    color: #666;
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+  td {
+    color: #aaa;
   }
   a {
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
+    color: #888;
+    text-decoration: none;
+    border-bottom: 1px dotted #555;
+    margin: 0 4px;
+    font-size: 11px;
   }
   a:hover {
-    color: red;
+    color: #ccc;
+    border-bottom-color: #ccc;
   }
   .status-ON {
-    color: green;
-    font-weight: bold;
+    color: #7a7a7a;
   }
   .status-DOWN, .status-ERROR {
-    color: red;
-    font-weight: bold;
+    color: #666;
   }
   .status-STARTING {
-    color: orange;
-    font-weight: bold;
+    color: #999;
   }
   .status-OFFLINE {
-    color: gray;
-    font-weight: normal;
-    font-style: italic;
+    color: #444;
+  }
+  tr:hover {
+    background-color: #222;
   }
   tr.offline {
-    background-color: #ffe5e5;
+    opacity: 0.6;
   }
   tr.starting {
-    background-color: #e5ffe5;
+    background-color: #252525;
   }
 </style>
 <script>
@@ -200,43 +219,41 @@ function fetchStatus() {
 
       row.innerHTML = `
         <td>${name}</td>
-        <td title="${info.errors.length ? info.errors.join('\\n') : 'Нет ошибок'}" class="status-${info.status.split(' ')[0]}">${info.status}</td>
+        <td title="${info.errors.length ? info.errors.join('\\n') : 'No errors'}" class="status-${info.status.split(' ')[0]}">${info.status}</td>
         <td>${info.cpu.toFixed(1)}</td>
         <td>${info.mem.toFixed(1)}</td>
         <td>${info.uptime || '-'}</td>
         <td>
           ${info.status === 'OFFLINE'
-            ? `<a href="/enable/${name}">Включить</a>`
-            : `<a href="/restart/${name}">Перезапустить</a> |
-               <a href="/stop/${name}">Остановить</a> |
-               <a href="/disable/${name}">Выключить</a>`}
+            ? `<a href="/enable/${name}">Enable</a>`
+            : `<a href="/restart/${name}">Restart</a> |
+               <a href="/stop/${name}">Stop</a> |
+               <a href="/disable/${name}">Turn off</a>`}
         </td>
       `;
       tbody.appendChild(row);
     }
   });
 }
-// Обновлять каждую секунду
 setInterval(fetchStatus, 1000);
 window.onload = fetchStatus;
 </script>
 </head>
 <body>
-  <h1>Управление ботами</h1>
-  <div id="system-info" class="system-info">Загрузка...</div>
+  <h1>BotCommander</h1>
+  <div id="system-info" class="system-info">Loading...</div>
   <table>
     <thead>
       <tr>
-        <th>Имя бота</th>
-        <th>Статус</th>
+        <th>Bot name</th>
+        <th>Status</th>
         <th>CPU (%)</th>
         <th>RAM (%)</th>
-        <th>Аптайм</th>
-        <th>Действия</th>
+        <th>Uptime</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody id="bots-tbody">
-      <!-- Данные будут загружены через JS -->
     </tbody>
   </table>
 </body>
