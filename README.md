@@ -1,42 +1,57 @@
 
  ![BotCommander интерфейс](interface.jpg)
 
-🚀 BotCommander
 
-BotCommander — это простой и удобный веб-интерфейс для управления множеством Python-ботов.
-Каждый бот изолирован в своей собственной директории с виртуальным окружением (venv). Интерфейс показывает статус, загрузку CPU/RAM, аптайм, а также позволяет запускать, останавливать, перезапускать и отключать ботов.
-🛠 Возможности
+BotCommander is a simple and user-friendly web interface for managing multiple Python bots. Each bot is isolated in its own directory with a virtual environment (venv). The interface displays status, CPU/RAM usage, uptime, and allows you to start, stop, restart, and disable bots.
 
-    Веб-интерфейс на Flask
 
-    Автоматический запуск всех ботов при старте
 
-    Мониторинг загрузки CPU, памяти и аптайма каждого бота
+🛠 Features
 
-    Управление ботами: запуск, остановка, перезапуск, отключение
+    Web interface built on Flask
+    Automatic startup of all bots on launch
+    Monitor CPU, memory, and uptime for each bot
+    Bot management: start, stop, restart, disable
+    Display system information (CPU, RAM, uptime, OS, etc.)
 
-    Отображение системной информации (CPU, RAM, аптайм, ОС и т.д.)
+BotCommander doesn't use Docker because Python's virtual environments (venv) provide sufficient isolation for managing bots — it's lighter, faster, and doesn't waste resources on container overhead.
 
-🧩 Пример добавления нового бота
+🧩 Example: Adding a New Bot
 
-mkdir -p bot/mybot
-cd bot/mybot
-python3 -m venv venv
-source venv/bin/activate
-pip install <нужные_зависимости>
-nano main.py  # создайте и напишите код вашего бота
+    mkdir -p bot/mybot
+    cd bot/mybot
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install <required_dependencies>
+    nano main.py  # create and write your bot's code
 
- ⚠️ Важно: у каждого бота обязательно должен быть файл main.py, а также создано виртуальное окружение venv/.
-    Скрипт запускает бота с помощью source venv/bin/activate && python3 main.py.
+✅ Running BotCommander
 
-✅ Запуск BotCommander
+    #Install dependencies:
+    pip install flask psutil
 
-Установите зависимости:
+    #Launch the interface:
+    python3 main.py
 
-pip install flask psutil
+    Open in your browser: http://localhost:9999
 
-Запустите интерфейс:
+🧩 Adding a New Bot
 
-python3 main.py
+    #Create bot directory
+    mkdir -p bot/mybot
+    cd bot/mybot
+    
+    
+    #Create virtual environment
+    python3 -m venv venv
+    source venv/bin/activate
 
-Откройте в браузере: http://localhost:9999
+    #Install dependencies
+    pip install <required_dependencies>
+
+    #Create bot entry point
+    nano main.py
+
+⚠️ Important: Each bot must have a main.py file and a venv/ virtual environment.
+   Bots are launched with: source venv/bin/activate && python3 main.py
+
