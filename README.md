@@ -1,5 +1,7 @@
 
- ![BotCommander интерфейс](interface.jpg)
+<h1 align="center"><b>⌘ BotCommander</b></h1> 
+
+ ![BotCommander интерфейс](interface.png)
 
 
 BotCommander is a simple and user-friendly web interface for managing multiple Python bots. Each bot is isolated in its own directory with a virtual environment (venv). The interface displays status, CPU/RAM usage, uptime, and allows you to start, stop, restart, and disable bots.
@@ -16,7 +18,7 @@ BotCommander is a simple and user-friendly web interface for managing multiple P
 
 BotCommander doesn't use Docker because Python's virtual environments (venv) provide sufficient isolation for managing bots — it's lighter, faster, and doesn't waste resources on container overhead.
 
-✅ Running BotCommander
+☑ Running BotCommander
 
     #Install dependencies:
     pip install flask psutil
@@ -26,7 +28,7 @@ BotCommander doesn't use Docker because Python's virtual environments (venv) pro
 
     Open in your browser: http://localhost:9999
 
-🧩 Adding a New Bot
+⬡ Adding a New Bot
 
     #Create bot directory
     mkdir -p bot/mybot
@@ -43,6 +45,6 @@ BotCommander doesn't use Docker because Python's virtual environments (venv) pro
     #Create bot entry point
     nano main.py
 
-⚠️ Important: Each bot must have a main.py file and a venv/ virtual environment.
+△ Important: Each bot must have a main.py file and a venv/ virtual environment.
    Bots are launched with: source venv/bin/activate && python3 main.py
 
