@@ -55,18 +55,43 @@ def bot_worker(name, path):
 
         try:
             STATUS[name] = 'STARTING'
+            
+            abs_path = os.path.abspath(path)
+            venv_python = os.path.join(abs_path, 'venv', 'bin', 'python3')
+            main_py = os.path.join(abs_path, 'main.py')
+            
+            if not os.path.exists(venv_python):
+                add_error(name, f"Python not found: {venv_python}")
+                STATUS[name] = 'ERROR'
+                time.sleep(5)
+                continue
+                
+            if not os.path.exists(main_py):
+                add_error(name, f"main.py not found")
+                STATUS[name] = 'ERROR'
+                time.sleep(5)
+                continue
+            
             PROCESSES[name] = subprocess.Popen(
-                ['bash', '-c', f'source {path}/venv/bin/activate && python3 {path}/main.py'],
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                [venv_python, main_py],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                cwd=abs_path,
+                env=os.environ.copy()
+            )
+            
             STATUS[name] = 'ON'
             stdout, stderr = PROCESSES[name].communicate()
+            
             if PROCESSES[name].returncode != 0:
-                err_msg = stderr.decode(errors='ignore').strip() or f"Exit code {PROCESSES[name].returncode}"
-                add_error(name, err_msg)
-                STATUS[name] = f'DOWN'
+                err_msg = stderr.decode('utf-8', errors='ignore').strip()
+                add_error(name, err_msg or f"Exit code {PROCESSES[name].returncode}")
+                STATUS[name] = 'DOWN'
+                
         except Exception as e:
             add_error(name, str(e))
-            STATUS[name] = f'ERROR'
+            STATUS[name] = 'ERROR'
+            
         time.sleep(5)
 
 def start_all_bots():
