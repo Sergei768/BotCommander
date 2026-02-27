@@ -554,4 +554,14 @@ def enable_bot(botname):
 
 if __name__ == '__main__':
     start_all_bots()
+    local_ip = socket.gethostbyname(socket.gethostname())
+    print(f" ⌘ BotCommander http://{local_ip}:9999")
+    try:
+        app.run(host='0.0.0.0', port=9999)
+    except OSError as e:
+        if e.errno == 98 or "Address already in use" in str(e):
+            print(f"[err] Port 9999 in use")
+        else:
+            print(f"[err] {e}")
+        sys.exit(1)
     app.run(host='0.0.0.0', port=9999)
