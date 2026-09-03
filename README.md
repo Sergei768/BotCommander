@@ -1,6 +1,12 @@
 
 <h1 align="center"><b>⌘ BotCommander</b></h1> 
 
+<p align="center">
+  <img src="https://img.shields.io/github/stars/Sergei768/BotCommander?style=flat-square&logo=github&color=yellow" alt="Stars">
+  <img src="https://img.shields.io/badge/python-3.9%2B-blue?style=flat-square&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/github/license/Sergei768/BotCommander?style=flat-square&color=green" alt="License">
+</p>
+
  ![BotCommander интерфейс](interface.png)
 
 
@@ -47,4 +53,3 @@ BotCommander doesn't use Docker because Python's virtual environments (venv) pro
 
 △ Important: Each bot must have a main.py file and a venv/ virtual environment.
    Bots are launched with: source venv/bin/activate && python3 main.py
-
