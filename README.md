@@ -12,8 +12,6 @@
 
 BotCommander is a simple and user-friendly web interface for managing multiple Python bots. Each bot is isolated in its own directory with a virtual environment (venv). The interface displays status, CPU/RAM usage, uptime, and allows you to start, stop, restart, and disable bots.
 
-
-
 🛠 Features
 
     Web interface built on Flask
@@ -21,6 +19,10 @@ BotCommander is a simple and user-friendly web interface for managing multiple P
     Monitor CPU, memory, and uptime for each bot
     Bot management: start, stop, restart, disable
     Display system information (CPU, RAM, uptime, OS, etc.)
+    Per-bot logs in `./logs/{name}.log`
+    Password authentication with hashing
+    Brute-force protection (IP lockout after 5 failed attempts)
+    Auto-discovery and launch of bots from `./bot/`
 
 BotCommander doesn't use Docker because Python's virtual environments (venv) provide sufficient isolation for managing bots — it's lighter, faster, and doesn't waste resources on container overhead.
 
